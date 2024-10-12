@@ -1,0 +1,31 @@
+     1                                  section .data
+     2                                  	EXIT 			equ 	60
+     3                                  	EXIT_SUCCESS 	equ	 	0
+     4 00000000 0C00EB038F19686015-     	array 			dw 		12, 1003, 6543, 24680, 789, 30123, 32766
+     4 00000009 03AB75FE7F         
+     5 0000000E 000000000000000000-     	even			dw		0, 0, 0, 0, 0, 0, 0
+     5 00000017 0000000000         
+     6                                  section .text
+     7                                  	global _start
+     8                                  _start:
+     9 00000000 BE00000000              	mov rsi, 0
+    10 00000005 BF00000000              	mov rdi, 0
+    11                                  _doWhile:
+    12 0000000A 668B8436[00000000]      	mov ax, word[array + 2*rsi]
+    13 00000012 66B90200                	mov cx, 2
+    14 00000016 4831D2                  	xor rdx, rdx
+    15 00000019 66F7F1                  	div cx
+    16 0000001C 6683FA00                	cmp dx, 0
+    17 00000020 7513                    	jne _notEven
+    18                                  _addToEven:
+    19 00000022 668B8436[00000000]      	mov ax, word[array + 2*rsi]
+    20 0000002A 6689843F[0E000000]      	mov word[even + 2*rdi], ax
+    21 00000032 48FFC7                  	inc rdi
+    22                                  _notEven:
+    23 00000035 48FFC6                  	inc rsi
+    24 00000038 4883FE07                	cmp rsi, 7
+    25 0000003C 72CC                    	jb _doWhile
+    26                                  _end:
+    27 0000003E B83C000000              	mov rax, EXIT
+    28 00000043 BF00000000              	mov rdi, EXIT_SUCCESS
+    29 00000048 0F05                    	syscall
